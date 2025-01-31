@@ -6,6 +6,7 @@ import { CreateUserDto } from '../dto/create.user-dto';
 import { EcomException } from 'src/exception/ecomException';
 
 import { UserRepository } from '../repositories/user.repository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -29,9 +30,18 @@ export class UserService {
       console.log('Received DTO:', dto);
       console.log(this.userRepository);
 
+      const foundUser = await this.userRepository.findByEmail(dto.email);
+
+      if (foundUser) {
+        throw new EcomException(
+          'This email already exist in system',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       const user = new User();
       user.email = dto.email;
-      user.password = dto.password;
+      user.password = await this.hashPassword(dto.password);
       user.username = dto.username;
 
       return await this.userRepository.save(user);
@@ -61,5 +71,18 @@ export class UserService {
     await this.userRepository.update(id, { ...dto });
 
     return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+
+    return await bcrypt.hash(password, saltRounds);
+  }
+
+  async validatePassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hashedPassword);
   }
 }
