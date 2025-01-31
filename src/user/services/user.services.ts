@@ -1,5 +1,4 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 
 import { CreateUserDto } from '../dto/create.user-dto';
@@ -7,12 +6,12 @@ import { EcomException } from 'src/exception/ecomException';
 
 import { UserRepository } from '../repositories/user.repository';
 import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: UserRepository,
+    @InjectRepository(User) private readonly userRepository: UserRepository,
   ) {}
 
   async getByName(username: string, email: string): Promise<User[]> {
@@ -25,18 +24,14 @@ export class UserService {
     return result;
   }
 
-  async saveUser(dto: CreateUserDto) {
+  async saveUser(dto: CreateUserDto): Promise<User> {
     try {
       console.log('Received DTO:', dto);
       console.log(this.userRepository);
 
-      const foundUser = await this.userRepository.findByEmail(dto.email);
-
-      if (foundUser) {
-        throw new EcomException(
-          'This email already exist in system',
-          HttpStatus.BAD_REQUEST,
-        );
+      const existingUser = await this.userRepository.findbyEmail(dto.email);
+      if (existingUser) {
+        throw new EcomException('User already exists', HttpStatus.CONFLICT);
       }
 
       const user = new User();

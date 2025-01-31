@@ -6,13 +6,14 @@ import { User } from 'src/user/entities/user.entity';
 import { EcomException } from 'src/exception/ecomException';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private userRepository: UserRepository,
+    @InjectRepository(User) private readonly userRepository: UserRepository,
   ) {}
   async register(dto: CreateUserDto): Promise<User> {
     if (!dto.username || !dto.email || !dto.password) {
@@ -28,7 +29,8 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<{ access_token: string }> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findbyEmail(email);
+
     if (!user) {
       throw new EcomException(
         'There is no user with this id',
@@ -37,6 +39,7 @@ export class AuthService {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       throw new EcomException('Password is not valid', HttpStatus.BAD_REQUEST);
     }
