@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 export class Card {
   @PrimaryGeneratedColumn()
@@ -18,4 +19,7 @@ export class Card {
 
   @Column()
   cvv: string;
+
+  @ManyToOne(() => User, (user) => user.cards)
+  user: User;
 }
