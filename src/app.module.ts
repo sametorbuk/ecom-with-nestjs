@@ -7,6 +7,8 @@ import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 
 import { UserModule } from './user/user.module';
+import { Card } from './card/entities/card.entity';
+import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { UserModule } from './user/user.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       synchronize: true,
-      entities: [User],
+      entities: [User, Card],
       ssl: {
         rejectUnauthorized: false,
       },
@@ -30,6 +32,7 @@ import { UserModule } from './user/user.module';
 
     AuthModule,
     UserModule,
+    CardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
