@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { Card } from './card/entities/card.entity';
 import { CardModule } from './card/card.module';
+import { OpenAiModule } from './openAi/open.ai.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CardModule } from './card/card.module';
     AuthModule,
     UserModule,
     CardModule,
+    OpenAiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

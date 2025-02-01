@@ -1,6 +1,7 @@
 import { User } from 'src/user/entities/user.entity';
-import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Card {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,6 +21,6 @@ export class Card {
   @Column()
   cvv: string;
 
-  @ManyToOne(() => User, (user) => user.cards)
+  @ManyToOne(() => User, (user) => user.cards, { onDelete: 'CASCADE' })
   user: User;
 }
