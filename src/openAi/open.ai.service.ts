@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
 @Injectable()
 export class OpenAIService {
   private openai: OpenAI;
 
-  constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+  constructor(private configService: ConfigService) {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+
+    if (!apiKey) {
+      throw new Error(
+        'OpenAI API key is missing. Please check your .env file.',
+      );
+    }
+
+    this.openai = new OpenAI({ apiKey });
   }
 
   async chatWithGPT(prompt: string): Promise<string> {
