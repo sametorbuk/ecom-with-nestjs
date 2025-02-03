@@ -7,7 +7,7 @@ export class OpenAIService {
   private openai: OpenAI;
 
   constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       throw new Error(
