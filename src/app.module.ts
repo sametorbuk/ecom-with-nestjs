@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { Card } from './card/entities/card.entity';
 import { CardModule } from './card/card.module';
 import { OpenAiModule } from './openAi/open.ai.module';
+import { Address } from './address/entities/adddress.entity';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { OpenAiModule } from './openAi/open.ai.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       synchronize: true,
-      entities: [User, Card],
+      entities: [User, Card, Address],
       ssl: {
         rejectUnauthorized: false,
       },
@@ -35,6 +37,7 @@ import { OpenAiModule } from './openAi/open.ai.module';
     UserModule,
     CardModule,
     OpenAiModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

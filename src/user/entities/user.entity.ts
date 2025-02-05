@@ -1,3 +1,4 @@
+import { Address } from 'src/address/entities/adddress.entity';
 import { Card } from 'src/card/entities/card.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -17,4 +18,7 @@ export class User {
 
   @OneToMany(() => Card, (card) => card.user)
   cards: Card[];
+
+  @OneToMany(() => Address, (adddress) => adddress.user)
+  addresses: Address[];
 }
